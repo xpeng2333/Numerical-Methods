@@ -1,8 +1,8 @@
-#include <limits.h>
+#include <math.h>
 #include <stdio.h>
 int main() {
     double A[9][9] = {
-        {31, -31, 0, 0, 0, -10, 0, 0, 0}, {-13, 35, -9, 0, -11, 0, 0, 0, 0},
+        {31, -13, 0, 0, 0, -10, 0, 0, 0}, {-13, 35, -9, 0, -11, 0, 0, 0, 0},
         {0, -9, 31, -10, 0, 0, 0, 0, 0},  {0, 0, -10, 79, -30, 0, 0, 0, -9},
         {0, 0, 0, -30, 57, -7, 0, -5, 0}, {0, 0, 0, 0, -7, 47, -30, 0, 0},
         {0, 0, 0, 0, 0, -30, 41, 0, 0},   {0, 0, 0, 0, -5, 0, 0, 27, -2},
@@ -14,12 +14,12 @@ int main() {
 
     for (int k = 0; k < 8; k++) {
         //找最大
-        a_ik = A[k][k];
+        a_ik = fabs(A[k][k]);
         row_flag = k;
         for (int i = k + 1; i < 9; i++) {
-            if (a_ik < A[i][k]) {
+            if (a_ik < fabs(A[i][k])) {
                 row_flag = i;
-                a_ik = A[i][k];
+                a_ik = fabs(A[i][k]);
             }
         }
         //交换
@@ -36,10 +36,10 @@ int main() {
         }
         //消元法
         for (int i = k + 1; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
+            for (int j = k + 1; j < 9; j++) {
                 A[i][j] -= A[k][j] * A[i][k] / A[k][k];
             }
-            Ax[i] -= Ax[i] * A[i][k] / A[k][k];
+            Ax[i] -= Ax[k] * A[i][k] / A[k][k];
         }
     }
     //求解
@@ -49,8 +49,9 @@ int main() {
         }
         x[i] = Ax[i] / A[i][i];
     }
+    printf("根为：\n");
     for (int i = 0; i < 9; i++) {
-        printf("x%d = %16.12e\n", i, x[i]);
+        printf("%16.12e\n", x[i]);
     }
     return 0;
 }
