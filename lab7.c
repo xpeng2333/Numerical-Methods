@@ -5,6 +5,7 @@ double f(double x, double y) { return -x * x * y * y; }
 double yx(double x) { return 3 / (1 + x * x * x); }
 int main(int argc, char const *argv[]) {
     double hList[4] = {0.1, 0.1 / 2, 0.1 / 4, 0.1 / 8};
+    int count[4] = {15, 30, 60, 120};
     double yh1[15];
     double yh2[30];
     double yh3[60];
@@ -18,7 +19,7 @@ int main(int argc, char const *argv[]) {
         double xi, yi;
         double *yh = yhList[i];
         int index;
-        for (index = 0, xi = 0, yi = 3; xi <= 1.5; index++, xi += h) {
+        for (index = 0, xi = 0, yi = 3; index < count[i]; index++, xi += h) {
             k1 = f(xi, yi);
             k2 = f(xi + h / 2, yi + h * k1 / 2);
             k3 = f(xi + h / 2, yi + h * k2 / 2);
@@ -44,7 +45,8 @@ int main(int argc, char const *argv[]) {
         int index;
         xim1 = 0;
         yim1 = 3;
-        for (index = 1, xi = h, yi = yh[0]; xi <= 1.5 - h; index++, xi += h) {
+        for (index = 1, xi = h, yi = yh[0]; index < count[i];
+             index++, xi += h) {
             xia1 = xi + h;
             xim1 = xi - h;
             yia1 =
