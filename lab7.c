@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]) {
     double yh3[60];
     double yh4[120];
     double *yhList[4] = {yh1, yh2, yh3, yh4};
-    printf("Runge-Kutta ·¨µÄÎó²îºÍÎó²î½×£º\n");
+    printf("Runge-Kutta æ³•çš„è¯¯å·®å’Œè¯¯å·®é˜¶ï¼š\n");
     double k1, k2, k3, k4;
     double eh, ehk, ok;
     for (int i = 0; i < 4; i++) {
@@ -29,42 +29,51 @@ int main(int argc, char const *argv[]) {
         }
         if (i == 0) {
             eh = fabs(yi - yx(1.5));
-            ehk = eh;
-            ok = 1;
+            printf("æ­¥é•¿: %6.4f ,%16.12e\n", h, eh);
         } else {
             ehk = fabs(yi - yx(1.5));
-            ok = log2(eh / ehk) / log2(i + 1);
+            ok = log2(eh / ehk) / log2(2);
+            printf("æ­¥é•¿: %6.4f ,%16.12e ,%16.12e\n", h, ehk, ok);
+            eh = ehk;
         }
-        printf("²½³¤: %6.4f ,%16.12e ,%16.12e\n", h, ehk, ok);
     }
-    printf("AdamsÒþ¸ñÊ½£¬Îó²îºÍÎó²î½×Îª£º\n");
+    printf("Adamséšæ ¼å¼ï¼Œè¯¯å·®å’Œè¯¯å·®é˜¶ä¸ºï¼š\n");
     for (int i = 0; i < 4; i++) {
         double h = hList[i];
-        double xim1, yim1, xi, yi, xia1, yia1;
+        double xim1, yim1, xi, yi, xia1, yia1, xim2, yim2;
         double *yh = yhList[i];
         int index;
-        xim1 = 0;
-        yim1 = 3;
-        for (index = 1, xi = h, yi = yh[0]; index < count[i];
-             index++, xi += h) {
+        xi = 2 * h;
+        yi = yh[1];
+        xim1 = h;
+        yim1 = yh[0];
+        xim2 = 0;
+        yim2 = 3;
+        double tmpYia1;
+        for (index = 1; index < count[i] - 1; index++, xi += h) {
             xia1 = xi + h;
             xim1 = xi - h;
+            xim2 = xi - 2 * h;
+            tmpYia1 =
+                yi +
+                h * (23 * f(xi, yi) - 16 * f(xim1, yim1) + 5 * f(xim2, yim2)) /
+                    12;
             yia1 =
                 yi +
-                h * (5 * f(xia1, yh[index]) + 8 * f(xi, yi) - f(xim1, yim1)) /
-                    12;
+                h * (5 * f(xia1, tmpYia1) + 8 * f(xi, yi) - f(xim1, yim1)) / 12;
+            yim2 = yim1;
             yim1 = yi;
             yi = yia1;
         }
         if (i == 0) {
             eh = fabs(yi - yx(1.5));
-            ehk = eh;
-            ok = 1;
+            printf("æ­¥é•¿: %6.4f ,%16.12e\n", h, eh);
         } else {
             ehk = fabs(yi - yx(1.5));
-            ok = log2(eh / ehk) / log2(i + 1);
+            ok = log2(eh / ehk) / log2(2);
+            printf("æ­¥é•¿: %6.4f ,%16.12e ,%16.12e\n", h, ehk, ok);
+            eh = ehk;
         }
-        printf("²½³¤: %6.4f ,%16.12e ,%16.12e\n", h, ehk, ok);
     }
     return 0;
 }
